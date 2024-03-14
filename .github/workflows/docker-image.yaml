@@ -10,7 +10,7 @@ jobs:
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: matrix
         name: Setup
         run: echo "matrix=$(ls images | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
@@ -26,9 +26,7 @@ jobs:
       packages: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: actions/checkout@v4
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       - name: Log in to the Container registry
@@ -41,7 +39,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: images/${{ matrix.image }}
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
-          tags: ghcr.io/${{ github.actor }}/images/${{ matrix.image }}:latest
+          tags: ghcr.io/groveer/images/${{ matrix.image }}:latest
           labels: org.opencontainers.image.title=docker-images
